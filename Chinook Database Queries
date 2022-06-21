@@ -89,3 +89,13 @@ GROUP BY emp.Firstname
 ORDER BY Total_Sales DESC 
 LIMIT 1;
 
+/*Top 10 songs on playlists.*/
+SELECT count(pt.TrackID) AS Count, t.Name
+FROM chinook.playlists AS p
+JOIN chinook.playlist_track AS pt
+ON p.playlistId = pt.playlistID
+JOIN chinook.tracks AS t
+ON pt.TrackID = t.TrackId
+GROUP BY t.Name
+ORDER BY Count DESC
+LIMIT 10;
