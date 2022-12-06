@@ -1,0 +1,24 @@
+\\We will first identify the three best-performing industries based on the number of new unicorns created over the last three years (2019, 2020, and 2021) combined.\\
+SELECT i.industry, 
+  COUNT(*) AS num_unicorns
+FROM industries AS i
+JOIN dates as d
+ON i.company_id = d.company_id
+WHERE EXTRACT(YEAR from d.date_joined) = 2020 OR EXTRACT(YEAR from d.date_joined) = 2021 OR EXTRACT(YEAR from d.date_joined) = 2019
+GROUP BY i.industry
+ORDER BY num_unicorns DESC
+LIMIT 3;
+
+\\Now that we know Fintech, Internet software & services, and E-commerce & direct-to-consumer are the three best-performing indsutries we will determine the average valuation for each of these industries for each of the last three years.\\
+SELECT i.industry,
+	EXTRACT(YEAR from d.date_joined) AS year,
+    COUNT(*) AS num_unicorns,
+    ROUND(AVG(f.valuation)/1000000000,2) AS average_valuation_billions
+FROM industries AS i
+	JOIN dates AS d
+	ON i.company_id = d.company_id
+	JOIN funding AS f
+	ON d.company_id = f.company_id
+WHERE (i.industry = 'Fintech' OR i.industry = 'Internet software & services' OR i.industry = 'E-commerce & direct-to-consumer') AND (EXTRACT(YEAR from d.date_joined) = 2020 OR EXTRACT(YEAR from d.date_joined) = 2021 OR EXTRACT(YEAR from d.date_joined) = 2019)
+GROUP BY i.industry, year
+ORDER BY i.industry, year DESC
